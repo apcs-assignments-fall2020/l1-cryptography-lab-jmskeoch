@@ -2,9 +2,42 @@ import java.util.Scanner;
 
 public class Vigenere {
     public static String encryptVigenere(String message, String key) {
-        return message;
-        // REPLACE THIS WITH YOUR CODE
+        //Init vars
+        String result = "";
+        int j = 0;
+        int cur_key;
+        int[] keys = key.chars().toArray();
+
+        //Loop through message
+        for(int i = 0; i < message.length(); i++) {
+            //If we can't add one to j (counter) and use it for the array (out of bounds), then reset to start over
+            if(j > keys.length - 1) {j = 0;}
+            //Gather # of steps to shift
+            cur_key = keys[j] % 65;
+            
+            //If we can shift forward without starting at the beginning of the section, proceed
+            if((message.charAt(i) >= 65 && message.charAt(i) <= 90 - cur_key)
+            || (message.charAt(i) >= 97 && message.charAt(i) <= 122 - cur_key)) {
+                //Append
+                result += (char) (message.charAt(i) + cur_key);
+                j++;
+            } 
+            //If we have to shift by starting at the beginning of the section, then proceed as such
+            else if((message.charAt(i) >= 90 - cur_key && message.charAt(i) <= 90)
+            || (message.charAt(i) >= 122 - cur_key && message.charAt(i) <= 122)) {
+                //Append
+                result += (char) (message.charAt(i) - (26 - cur_key));
+                j++;
+            } 
+            //Misc. chars (not letters)
+            else {
+                result += message.charAt(i);
+            }
+        }
+        //Return the new string
+        return result;
     }
+    
 
     public static String decryptVigenere(String message, String key) {
         return message;
