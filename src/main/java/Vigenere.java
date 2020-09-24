@@ -1,6 +1,12 @@
 import java.util.Scanner;
 
 public class Vigenere {
+    /**
+     * This method takes in two parameters:
+     * @param message the message you want encrypted
+     * @param key the word or 'key' to used to represent the shifts done to message
+     * and returns an encrypted String dependent on the two parameters
+     */
     public static String encryptVigenere(String message, String key) {
         //Init vars
         String result = "";
@@ -38,13 +44,53 @@ public class Vigenere {
         return result;
     }
     
-
+    /**
+     * This method accepts two parameters:
+     * @param message the potentially encrypted message to be decrypted
+     * @param key the key to represent how many shifts to 'undo' to the encrypted message
+     * and returns a String dependent on the two paramters accepted
+     */
     public static String decryptVigenere(String message, String key) {
-        return message;
-        // REPLACE THIS WITH YOUR CODE
+        //Init vars
+        String result = "";
+        int j = 0;
+        int cur_key;
+        int[] keys = key.chars().toArray();
+
+        //Loop through message
+        for(int i = 0; i < message.length(); i++) {
+            //If we can move forward in the array, do it. Otherwise, reset counter
+            if(j > keys.length - 1) {j = 0;}
+            //Gather # of steps to shift
+            cur_key = keys[j] % 65;
+            
+            //Check upper bounds and ability to subtract
+            if((message.charAt(i) >= 65 + cur_key && message.charAt(i) <= 90)
+            || (message.charAt(i) >= 97 + cur_key && message.charAt(i) <= 122)) {
+                //Append
+                result += (char) (message.charAt(i) - cur_key);
+                j++;
+            } 
+            //Check lower bounds and shift accordingly
+            else if((message.charAt(i) >= 65 && message.charAt(i) <= 65 + cur_key + 1)
+            || (message.charAt(i) >= 97 && message.charAt(i) <= 97 + cur_key + 1)) {
+                //Append
+                result += (char) (message.charAt(i) + (26 - cur_key));
+                j++;
+            } 
+            //Misc. chars
+            else {
+                result += message.charAt(i);
+            }
+        }
+        //Return the new string
+        return result;
     }
 
 
+    /**
+     * Encrypt / Decrypt based off user input
+     */
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
 
